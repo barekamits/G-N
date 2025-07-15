@@ -91,6 +91,7 @@
   <img class="icon-img lift-12" src="NG-14.png" alt="Icon 14">
   <img class="icon-img lift-13" src="NG-15.png" alt="Icon 15">
   <!-- 🎶 Գրամոֆոնի նկար -->
+  <!-- 🎶 Գրամոֆոնի նկար -->
   <img id="musicIcon" class="music-icon" src="music .png" alt="Music Icon" />
 
   <!-- 🎵 Երաժշտություն -->
@@ -98,18 +99,26 @@
     <source src="Easy_access_orchestra_-_Glider_girl_(Vuxo7.com).mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
+
+
   <script>
     const icon = document.getElementById("musicIcon");
     const music = document.getElementById("bgMusic");
 
+    // ✅ Թարմացնելիս միշտ միացնել երգը
+    window.addEventListener('DOMContentLoaded', () => {
+      music.muted = false;
+      music.currentTime = 0;
+      music.play().catch(e => {
+        // Chrome-ի autoplay policy՝ user interaction required
+        console.warn("Autoplay failed until user interaction", e);
+      });
+    });
+
+    // ✅ Սեղմելով mute / unmute
     icon.addEventListener("click", () => {
-      if (music.muted) {
-        music.muted = false;
-        icon.classList.remove("muted");
-      } else {
-        music.muted = true;
-        icon.classList.add("muted");
-      }
+      music.muted = !music.muted;
+      icon.classList.toggle("muted", music.muted);
     });
   </script>
 </body>
