@@ -10,7 +10,6 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       background: #fffaf4;
       font-family: sans-serif;
@@ -18,14 +17,12 @@
       flex-direction: column;
       align-items: center;
     }
-
     .icon-img {
       width: 350px;
       max-width: 100%;
       display: block;
       margin-bottom: -5px;
     }
-
     .lift-1  { margin-top: -90px; }
     .lift-2  { margin-top: -195px; }
     .lift-3  { margin-top: -230px; }
@@ -39,7 +36,6 @@
     .lift-11 { margin-top: -230px; }
     .lift-12 { margin-top: -105px; }
     .lift-13 { margin-top: -109px; }
-
     .telegram-link {
       display: block;
       font-size: 14px;
@@ -51,7 +47,6 @@
       position: relative;
       z-index: 2;
     }
-
     .music-icon {
       position: fixed;
       top: 20px;
@@ -62,15 +57,29 @@
       transition: opacity 0.3s ease, filter 0.3s ease;
       z-index: 10;
     }
-
     .muted {
       opacity: 0.5;
       filter: grayscale(80%);
     }
+    .refresh-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #0088cc;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      z-index: 10;
+    }
+    .refresh-btn:hover {
+      background: #0077bb;
+    }
   </style>
 </head>
 <body>
-
   <img class="icon-img" src="NG-1.png" alt="Icon 1">
   <img class="icon-img" src="NG-2.png" alt="Icon 2">
   <img class="icon-img lift-1" src="NG-3.png" alt="Icon 3">
@@ -84,38 +93,94 @@
   <img class="icon-img lift-9" src="NG-11.png" alt="Icon 11">
   <img class="icon-img lift-10" src="NG-12.png" alt="Icon 12">
   <img class="icon-img lift-11" src="NG-13.png" alt="Icon 13">
-
   <a class="telegram-link" href="https://t.me/nparsyan" target="_blank">https://t.me/nparsyan</a>
-
   <img class="icon-img lift-12" src="NG-14.png" alt="Icon 14">
   <img class="icon-img lift-13" src="NG-15.png" alt="Icon 15">
-
-  <!-- ✅ 🎶 Icon -->
+  
+  <!-- Music Icon -->
   <img id="musicIcon" class="music-icon" src="music .png" alt="Music Icon" />
-
-  <!-- ✅ 🎵 Երաժշտություն -->
+  
+  <!-- Refresh Button -->
+  <button class="refresh-btn" onclick="location.reload()">Թարմացնել</button>
+  
+  <!-- Background Music -->
   <audio id="bgMusic" autoplay loop>
     <source src="Easy_access_orchestra_-_Glider_girl_(Vuxo7.com).mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
-
+  
   <script>
     const icon = document.getElementById("musicIcon");
     const music = document.getElementById("bgMusic");
-
+    let musicReady = false;
+    
+    // Check if music was previously muted
+    const wasMuted = localStorage.getItem('musicMuted') === 'true';
+    
+    // Initialize music state
     window.addEventListener('DOMContentLoaded', () => {
-      music.muted = false;
+      music.muted = wasMuted;
       music.currentTime = 0;
-      music.play().catch(e => {
-        console.warn("Autoplay failed:", e);
-      });
+      
+      // Update icon appearance based on muted state
+      if (wasMuted) {
+        icon.classList.add("muted");
+      }
+      
+      // Try to play music immediately (might fail due to autoplay policy)
+      tryPlayMusic();
     });
-
+    
+    // Function to try playing music
+    function tryPlayMusic() {
+      if (!music.muted && !musicReady) {
+        music.play().then(() => {
+          musicReady = true;
+          console.log("Music started successfully");
+        }).catch(e => {
+          console.log("Autoplay blocked - music will start on first user interaction");
+          setupFirstInteraction();
+        });
+      }
+    }
+    
+    // Setup first interaction handler
+    function setupFirstInteraction() {
+      const startMusic = () => {
+        if (!music.muted && !musicReady) {
+          music.play().then(() => {
+            musicReady = true;
+            console.log("Music started after user interaction");
+          }).catch(console.warn);
+        }
+      };
+      
+      // Listen for various user interactions
+      ['click', 'touchstart', 'keydown'].forEach(event => {
+        document.addEventListener(event, startMusic, { once: true });
+      });
+    }
+    
+    // Toggle music mute/unmute
     icon.addEventListener("click", () => {
       music.muted = !music.muted;
       icon.classList.toggle("muted", music.muted);
+      
+      // Save the muted state to localStorage
+      localStorage.setItem('musicMuted', music.muted.toString());
+      
+      // If unmuting, try to play
+      if (!music.muted) {
+        music.play().then(() => {
+          musicReady = true;
+        }).catch(console.warn);
+      }
     });
+    
+    // Auto-refresh every 30 seconds (optional)
+    // setInterval(() => {
+    //   location.reload();
+    // }, 30000);
   </script>
-
 </body>
 </html>
