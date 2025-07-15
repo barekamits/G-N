@@ -40,7 +40,6 @@
     .lift-12 { margin-top: -105px; }
     .lift-13 { margin-top: -109px; }
 
-
     .telegram-link {
       display: block;
       font-size: 14px;
@@ -52,6 +51,7 @@
       position: relative;
       z-index: 2;
     }
+
     .music-icon {
       position: fixed;
       top: 20px;
@@ -73,7 +73,6 @@
 
   <img class="icon-img" src="NG-1.png" alt="Icon 1">
   <img class="icon-img" src="NG-2.png" alt="Icon 2">
-
   <img class="icon-img lift-1" src="NG-3.png" alt="Icon 3">
   <img class="icon-img lift-2" src="NG-4.png" alt="Icon 4">
   <img class="icon-img lift-3" src="NG-5.png" alt="Icon 5">
@@ -90,36 +89,33 @@
 
   <img class="icon-img lift-12" src="NG-14.png" alt="Icon 14">
   <img class="icon-img lift-13" src="NG-15.png" alt="Icon 15">
-  <!-- 🎶 Գրամոֆոնի նկար -->
-  <!-- 🎶 Գրամոֆոնի նկար -->
+
+  <!-- ✅ 🎶 Icon -->
   <img id="musicIcon" class="music-icon" src="music .png" alt="Music Icon" />
 
-  <!-- 🎵 Երաժշտություն -->
+  <!-- ✅ 🎵 Երաժշտություն -->
   <audio id="bgMusic" autoplay loop>
     <source src="Easy_access_orchestra_-_Glider_girl_(Vuxo7.com).mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
-
   <script>
     const icon = document.getElementById("musicIcon");
     const music = document.getElementById("bgMusic");
 
-    // ✅ Թարմացնելիս միշտ միացնել երգը
     window.addEventListener('DOMContentLoaded', () => {
       music.muted = false;
       music.currentTime = 0;
       music.play().catch(e => {
-        // Chrome-ի autoplay policy՝ user interaction required
-        console.warn("Autoplay failed until user interaction", e);
+        console.warn("Autoplay failed:", e);
       });
     });
 
-    // ✅ Սեղմելով mute / unmute
     icon.addEventListener("click", () => {
       music.muted = !music.muted;
       icon.classList.toggle("muted", music.muted);
     });
   </script>
+
 </body>
 </html>
